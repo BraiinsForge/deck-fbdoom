@@ -7,7 +7,7 @@ DOOM for Braiins Forge DECK based on awesome https://github.com/maximevince/fbDO
 - USB-C HUB with PD Support
 - USB keyboard
 
-# How do I run it? Easy way!
+# How do I run it? Easy!
 ### Access the DECK using SSH:
 
 ```
@@ -37,3 +37,22 @@ scp fbdoom doom.wad root@<miner-ip>:/root/
 ```
 
 
+# Can I compile it on my own?
+Yes of course! No need to trust strangers, just clone our repository.
+```
+git clone github.com/BraiinsForge/deck-fbdoom.git
+cd fbdoom
+```
+
+### Manual toolchain setup and build
+##### Debian/Ubuntu
+```
+sudo apt install gcc-arm-linux-gnueabihf
+```
+
+Build with:
+```
+export NOSDL=1
+make CROSS_COMPILE=arm-linux-gnueabihf- CFLAGS="-static -std=gnu99" LDFLAGS="-static"
+```
+Note that we need to compile with -std=gnu99 because newer GCCs default to gnu23 based on C23, in which several DOOM source files have compilation errors.
