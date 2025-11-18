@@ -1,5 +1,12 @@
 DOOM for Braiins Forge DECK based on awesome https://github.com/maximevince/fbDOOM project!
 
+
+# What do I need?
+- Braiins Forge DECK
+- USB-C PD Power Adapter
+- USB-C HUB with PD Support
+- USB keyboard
+
 # How do I run it? Easy way!
 ### Access the DECK using SSH:
 
