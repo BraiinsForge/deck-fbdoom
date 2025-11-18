@@ -15,7 +15,7 @@ service bmc stop # for temporary stop, after the restart the application will be
 ```
 or
 ```
-service bmc disable # for permament stop, after the restart the DECK application won't start
+service bmc disable # for permament stop, after the restart the DECK application won't start again
 ```
 
 ### Copy DOOM files:
