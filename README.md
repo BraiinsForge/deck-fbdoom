@@ -26,7 +26,7 @@ scp fbdoom doom.wad root@<miner-ip>:/root/
 - in case you want co compile it from source, continue reading
 ### Run the game!
 ```
-./fbdoom -iwad DOOM.WAD`
+./fbdoom -iwad DOOM.WAD
 ```
 
 
