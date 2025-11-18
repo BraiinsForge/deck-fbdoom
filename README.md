@@ -1,2 +1,5 @@
 # deck-fbdoom
-fbDoom for Braiins Forge DECK!
+DOOM for Braiins Forge DECK based on awesome https://github.com/maximevince/fbDOOM project!
+
+
+
