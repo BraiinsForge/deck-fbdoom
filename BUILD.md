@@ -10,6 +10,15 @@ The Deck uses an ARM-based processor (armv7), so you'll need a cross-compilation
 
 The easiest way to build fbDOOM is using the provided Nix flake, which sets up the complete cross-compilation environment automatically.
 
+You can build directly without cloning:
+```bash
+nix build github:BraiinsForge/deck-fbdoom#doom-deck
+```
+
+The binary will be at `./result/bin/fbdoom`.
+
+**Note:** To build for Braiins MiniMiner instead (with only the BGR color fix), use `#doom-bmm` instead of `#doom-deck`.
+
 ### Setup
 
 1. Install Nix with flakes support (if not already installed):
