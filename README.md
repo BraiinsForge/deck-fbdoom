@@ -24,14 +24,8 @@ ssh root@<deck-ip>  # Use the admin password you set during setup
 
 ### 3. Stop the Deck Application
 
-**Temporary stop** (will restart after reboot):
 ```bash
 service bmc stop
-```
-
-**Permanent stop** (won't start after reboot):
-```bash
-service bmc disable
 ```
 
 ### 4. Copy Files to Your Deck
@@ -50,10 +44,7 @@ chmod +x fbdoom
 
 ## Getting DOOM WAD Files
 
-The game requires a DOOM IWAD file. You can:
-
-- Download the shareware version from [Archive.org](https://archive.org/details/theultimatedoom_doom2_doom.wad)
-- Use your legally purchased DOOM game files (DOOM.WAD, DOOM2.WAD, etc.)
+A DOOM WAD file is included in the `game_files/` directory of this repository.
 
 ## Building from Source
 
