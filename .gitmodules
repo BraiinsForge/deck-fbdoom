@@ -1,3 +1,4 @@
 [submodule "fbdoom"]
 	path = fbdoom
 	url = git@github.com:BraiinsForge/fbDOOM-fork.git
+	branch = doom-deck
