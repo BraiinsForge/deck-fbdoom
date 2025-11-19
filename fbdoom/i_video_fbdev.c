@@ -53,6 +53,8 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 // STM32MP1 display configuration
 #define FB_ROTATION_90      1   // Portrait LCD used in landscape mode
 #define FB_LINE_OFFSET      120 // First 120 lines are invisible
+#define FB_OFFSET_X        -320   // Horizontal offset (adjust game position left/right)
+#define FB_OFFSET_Y         40   // Vertical offset (adjust game position up/down)
 
 struct fb_var_screeninfo fb = {};
 int fb_scaling = 1;
@@ -450,9 +452,13 @@ void I_FinishUpdate (void)
     // Physical framebuffer dimensions based on working GUI implementation
     // The framebuffer is actually 640 wide x 1280 tall in memory
     // But reports as 600x1280 due to the way it's configured
-    int fb_phys_width = 640;    // Physical width in pixels
-    int fb_phys_height = 1280;  // Physical height in pixels
+    int fb_phys_width = 640;    // Physical width in pixels (columns)
+    int fb_phys_height = 1280;  // Physical height in pixels (rows)
     int fb_visible_height = 480; // Visible rows (after 120 offset)
+    
+    // ACTUAL display dimensions (landscape view)
+    int display_width = 1280;   // Actual visible width in landscape
+    int display_height = 480;   // Actual visible height in landscape
     
     // Stride in bytes (pixels per row * bytes per pixel)
     int stride = fb_phys_width * bpp;  // 640 * 2 = 1280 bytes
@@ -468,14 +474,14 @@ void I_FinishUpdate (void)
             struct color c = colors[palindex];
             
             // Apply transformation:
-            // Mirror X, then map coordinates
-            // No offset needed - visible area is rows 0-479
+            // Apply offset first, then mirror against the display center
             
-            int mirrored_x = (SCREENWIDTH * fb_scaling - 1) - (x * fb_scaling);
+            // Add offset to the game coordinate before transformation
+            int offset_x = x * fb_scaling + FB_OFFSET_X;
             
-            // Landscape X becomes col, landscape Y becomes row
-            int phys_col = mirrored_x;
-            int phys_row = y * fb_scaling;  // No FB_LINE_OFFSET needed
+            // Mirror the entire offset position
+            int phys_col = (fb_phys_width - 1) - offset_x;
+            int phys_row = y * fb_scaling + FB_OFFSET_Y;
             
             // Draw scaled pixel
             for (int sy = 0; sy < fb_scaling; sy++) {
@@ -483,8 +489,8 @@ void I_FinishUpdate (void)
                     int px = phys_row + sy;
                     int py = phys_col + sx;
                     
-                    // Check bounds: row must be < 480 (visible height), col must be < 640 (physical width)
-                    if (px >= 0 && px < fb_visible_height && py >= 0 && py < fb_phys_width) {
+                    // Check bounds against actual display dimensions
+                    if (px >= 0 && px < display_height && py >= 0 && py < display_width) {
                         // Calculate pixel format
                         uint32_t pix;
                         if (fb.blue.offset > fb.red.offset) {
