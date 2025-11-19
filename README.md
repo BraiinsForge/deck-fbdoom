@@ -14,7 +14,7 @@ Run the classic DOOM on your Braiins Forge Deck! This project is based on the ex
 
 ### 1. Download Pre-compiled Files
 
-Download the latest `fbdoom` binary and `doom.wad` from our [releases page](https://github.com/BraiinsForge/deck-fbdoom/releases).
+Download the latest release zip (containing `fbdoom` binary and `doom.wad`) from the [releases page](https://github.com/BraiinsForge/deck-fbdoom/releases/latest).
 
 ### 2. Access Your Deck via SSH
 
@@ -28,9 +28,10 @@ ssh root@<deck-ip>  # Use the admin password you set during setup
 service bmc stop
 ```
 
-### 4. Copy Files to Your Deck
+### 4. Extract and Copy Files to Your Deck
 
 ```bash
+unzip deck-fbdoom.zip
 scp fbdoom doom.wad root@<deck-ip>:/root/
 ```
 
