@@ -1,43 +1,57 @@
-name: Release
+name: CI
 
 on:
   push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write
 
 jobs:
-  build-and-release:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+    - uses: cachix/install-nix-action@v31
+      with:
+        extra_nix_config: |
+          experimental-features = nix-command flakes
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Build doom-deck
+      run: nix build .#doom-deck
 
-      - name: Build doom-deck
-        run: nix build .#doom-deck
+    - name: Test binary
+      run: |
+        file ./result/bin/fbdoom
+        ls -lh ./result/bin/fbdoom
 
-      - name: Prepare release bundle
-        run: |
-          mkdir -p release
-          cp result/bin/fbdoom release/
-          cp game_files/DOOM.WAD release/doom.wad
-          cd release
-          zip -r ../deck-fbdoom.zip .
+    - name: Create release archive
+      if: github.event_name == 'release'
+      run: |
+        VERSION=$GITHUB_REF_NAME
+        echo "Building release for version: $VERSION"
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: deck-fbdoom.zip
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        mkdir -p deck-fbdoom-release
+        cp result/bin/fbdoom deck-fbdoom-release/
+        cp game_files/DOOM.WAD deck-fbdoom-release/doom.wad
+        cp README.md deck-fbdoom-release/
+        zip -r deck-fbdoom-${VERSION}-armv7l.zip deck-fbdoom-release/
+
+    - name: Upload release asset
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./deck-fbdoom-${{ github.ref_name }}-armv7l.zip
+        asset_name: deck-fbdoom-${{ github.ref_name }}-armv7l.zip
+        asset_content_type: application/zip
