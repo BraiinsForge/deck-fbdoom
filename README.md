@@ -1,58 +1,64 @@
-DOOM for Braiins Forge DECK based on awesome https://github.com/maximevince/fbDOOM project!
+# DOOM on Braiins Forge Deck
 
+Run the classic DOOM on your Braiins Forge Deck! This project is based on the excellent [fbDOOM](https://github.com/maximevince/fbDOOM) with custom patches for the Deck's STM32MP1 display hardware.
 
-# What do I need?
-- Braiins Forge DECK
-- USB-C PD Power Adapter
-- USB-C HUB with PD Support
-- USB keyboard
+## What You Need
 
-# How do I run it? Easy!
-### Access the DECK using SSH:
+- **Braiins Forge Deck**
+- **USB-C PD Power Adapter**
+- **USB-C Hub with PD Support**
+- **USB Keyboard**
+- **DOOM WAD file** (game data)
 
-```
-ssh root@<miner-ip>  # password = UI admin password you set during setup
-```
+## Quick Start
 
-### Stop the main DECK application:
+### 1. Download Pre-compiled Files
 
-```
-service bmc stop # for temporary stop, after the restart the application will be started again
-```
-or
-```
-service bmc disable # for permament stop, after the restart the DECK application won't start again
+Download the latest `fbdoom` binary and `doom.wad` from our [releases page](https://github.com/BraiinsForge/deck-fbdoom/releases).
+
+### 2. Access Your Deck via SSH
+
+```bash
+ssh root@<deck-ip>  # Use the admin password you set during setup
 ```
 
-### Copy DOOM files:
-- in case you want to use precompiled sources go to the folder game_files and copy fbdoom and DOOM.WAD files to the DECK
-```
-scp fbdoom doom.wad root@<miner-ip>:/root/
+### 3. Stop the Deck Application
+
+**Temporary stop** (will restart after reboot):
+```bash
+service bmc stop
 ```
 
-- in case you want co compile it from source, continue reading
-### Run the game!
-```
-./fbdoom -iwad DOOM.WAD
-```
-
-
-# Can I compile it on my own?
-Yes of course! No need to trust strangers, just clone our repository.
-```
-git clone github.com/BraiinsForge/deck-fbdoom.git
-cd fbdoom
+**Permanent stop** (won't start after reboot):
+```bash
+service bmc disable
 ```
 
-### Manual toolchain setup and build
-##### Debian/Ubuntu
-```
-sudo apt install gcc-arm-linux-gnueabihf
+### 4. Copy Files to Your Deck
+
+```bash
+scp fbdoom doom.wad root@<deck-ip>:/root/
 ```
 
-Build with:
+### 5. Run DOOM!
+
+```bash
+ssh root@<deck-ip>
+chmod +x fbdoom
+./fbdoom -iwad doom.wad
 ```
-export NOSDL=1
-make CROSS_COMPILE=arm-linux-gnueabihf- CFLAGS="-static -std=gnu99" LDFLAGS="-static"
-```
-Note that we need to compile with -std=gnu99 because newer GCCs default to gnu23 based on C23, in which several DOOM source files have compilation errors.
+
+## Getting DOOM WAD Files
+
+The game requires a DOOM IWAD file. You can:
+
+- Download the shareware version from [Archive.org](https://archive.org/details/theultimatedoom_doom2_doom.wad)
+- Use your legally purchased DOOM game files (DOOM.WAD, DOOM2.WAD, etc.)
+
+## Building from Source
+
+Want to compile fbDOOM yourself instead of using the pre-built binary? Check out [BUILD.md](BUILD.md) for complete instructions.
+
+## License
+
+DOOM source code is licensed under the GNU GPL. See the original fbDOOM repository for details.
