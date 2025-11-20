@@ -8,47 +8,58 @@ The Deck uses an ARM-based processor (armv7), so you'll need a cross-compilation
 
 ## Option 1: Using Nix (Recommended)
 
-The easiest way to build fbDOOM is using the provided Nix flake, which sets up the complete cross-compilation environment automatically.
+Nix is a reproducible build system and package manager that ensures consistent builds across different machines. The easiest way to build fbDOOM is using the provided Nix flake, which sets up the complete cross-compilation environment automatically.
 
-You can build directly without cloning:
+Alternatively, you can build by hand if you procure an ARM cross-compilation toolchain.
+
+### Installing Nix
+
+If you don't have Nix installed, install it with flakes support:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+
+For more information, see the [Nix installation guide](https://nixos.org/download.html).
+
+### Quick Build (Flake)
+
+The fastest way to build is using the Nix flake directly, without cloning the repository:
+
 ```bash
 nix build github:BraiinsForge/deck-fbdoom#doom-deck
 ```
 
 The binary will be at `./result/bin/fbdoom`.
 
-**Note:** To build for Braiins MiniMiner instead (with only the BGR color fix), use `#doom-bmm` instead of `#doom-deck`.
+**Build Variants:**
+- `#doom-deck` - Full Braiins Forge Deck build (BGR color fix + rotation + display offset)
+- `#doom-bmm` - Braiins MiniMiner build (BGR color fix only)
 
-### Setup
+### Advanced Development Workflow
 
-1. Install Nix with flakes support (if not already installed):
-   ```bash
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
-   ```
+For active development and iteration, use the Nix development environment:
 
-2. Clone this repository with submodules:
+1. Clone this repository with submodules:
    ```bash
    git clone --recursive git@github.com:BraiinsForge/deck-fbdoom.git
    cd deck-fbdoom
    ```
 
-3. Enter the Nix development environment:
+2. Enter the Nix development environment:
    ```bash
    nix develop
    ```
 
    **Note:** The first run downloads the ARM toolchain and builds dependencies, which can take several minutes.
 
-### Building
+3. Build using make:
+   ```bash
+   cd fbdoom
+   make
+   ```
 
-Once inside the Nix environment:
-
-```bash
-cd fbdoom
-make
-```
-
-The compiled binary will be at `./fbdoom/fbdoom`.
+   The compiled binary will be at `./fbdoom/fbdoom`.
 
 ## Option 2: Manual Toolchain Setup
 
